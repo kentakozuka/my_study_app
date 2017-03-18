@@ -1,0 +1,23 @@
+<html>
+	<h1><%= title %></h1>
+	<table>
+		<tr>
+			<th>
+				ID
+			</th>
+			<th>
+				USER NAME
+			</th>
+		<tr>
+		<% recordList.forEach(function(record) { if(record){ %>
+			<tr>
+				<td>
+					<%= record.ID %>
+				</td>
+				<td>
+					<%= record.USER_NAME %></p>
+				</td>
+			</tr>
+		<% }}); %>
+	</table>
+</html>

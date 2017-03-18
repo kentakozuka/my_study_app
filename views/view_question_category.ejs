@@ -1,0 +1,29 @@
+<html>
+	<h1><%= title %></h1>
+	<table>
+		<tr>
+			<th>
+				Category Name
+			</th>
+			<th>
+				Exam Name
+			</th>
+			<th>
+				Parent Category Name
+			</th>
+		<tr>
+		<% recordList.forEach(function(record) { if(record){ %>
+			<tr>
+				<td>
+					<%= record.CATEGORY_NAME %>
+				</td>
+				<td>
+					<%= record.EXAM_ID %></p>
+				</td>
+				<td>
+					<%= record.PARENT_QUESTION_CATEGORY %></p>
+				</td>
+			</tr>
+		<% }}); %>
+	</table>
+</html>

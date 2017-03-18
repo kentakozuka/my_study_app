@@ -1,0 +1,51 @@
+<html>
+<form method="post" action="/create_question_category">
+
+	<h1>Question Category</h1>
+
+	<table>
+		<tr>
+			<td>
+				EXAM Name:&nbsp;
+			</td>
+			<td>
+				<!-- ドロップダウンを表示 -->
+				<select name="exam_id" size="1">
+					<option value="blank" selected="selected" ></option>
+					<% examList.forEach(function(exam) { %>
+						<option value = "<%= exam.ID %>" >
+							<%= exam.EXAM_NAME %>
+						</option>
+					<% }); %>  
+ 				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Parent Question Category:&nbsp;
+			</td>
+			<td>
+				<!-- ドロップダウンを表示 -->
+				<select name="parent_question_category" size="1">
+					<option value="blank" selected="selected" ></option>
+					<% questionCategoryList.forEach(function(questionCategory) { %>
+						<option value = "<%= questionCategory.ID %>" >
+							<%= questionCategory.CATEGORY_NAME %>
+						</option>
+					<% }); %>  
+ 				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				Category Name:&nbsp;
+			</td>
+			<td>
+				<input type="text" name="category_name"><br/>
+			</td>
+		</tr>
+	</table>
+
+    <input type="submit" value="create!">
+</form>
+</html>
