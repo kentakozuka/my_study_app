@@ -30,12 +30,12 @@ var EditExamController = function(app){
 		};
 
 		//インサート処理
-		sqlCommon.insertRecord(connection, TABLE_NAME_EXAM, fields)
+		sqlCommon.insertRecord(connection, commonConst.TABLE_NAME_EXAM, fields)
 		//セレクト処理
     	.then(
 			function() {
 				console.log('insert success!');
-				return sqlCommon.selectRecord(connection, TABLE_NAME_EXAM)
+				return sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_EXAM)
 			}
 		)
 		//ルーティング
