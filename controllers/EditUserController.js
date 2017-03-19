@@ -3,6 +3,11 @@ var EditUserController = function(app){
 	//Modules
 	var connection = require('../mysqlConnection'); 
 
+	// パス/edit_userにアクセスした場合のルーティング
+	app.get('/edit_user', function(req, res) {
+    	res.render('edit_user');
+	});
+
 	// /create_examにPOSTした場合の処理
 	app.post('/create_user', function(req, res) {
 		console.log(req.body);

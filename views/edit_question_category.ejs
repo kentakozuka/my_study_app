@@ -1,17 +1,16 @@
 <html>
-<form method="post" action="/create_question_category">
+<form method="post" name="form1" action="/create_question_category" onSubmit="return inputCheck();" >
 
-	<h1>Question Category</h1>
+	<h1>カテゴリ登録</h1>
 
 	<table>
 		<tr>
 			<td>
-				EXAM Name:&nbsp;
+				試験名:&nbsp;
 			</td>
 			<td>
 				<!-- ドロップダウンを表示 -->
-				<select name="exam_id" size="1">
-					<option value="blank" selected="selected" ></option>
+				<select name="exam_id" size="1" onChange="onExamChanged();">
 					<% examList.forEach(function(exam) { %>
 						<option value = "<%= exam.ID %>" >
 							<%= exam.EXAM_NAME %>
@@ -22,12 +21,11 @@
 		</tr>
 		<tr>
 			<td>
-				Parent Question Category:&nbsp;
+				親のカテゴリ:&nbsp;
 			</td>
 			<td>
 				<!-- ドロップダウンを表示 -->
 				<select name="parent_question_category" size="1">
-					<option value="blank" selected="selected" ></option>
 					<% questionCategoryList.forEach(function(questionCategory) { %>
 						<option value = "<%= questionCategory.ID %>" >
 							<%= questionCategory.CATEGORY_NAME %>
@@ -38,7 +36,7 @@
 		</tr>
 		<tr>
 			<td>
-				Category Name:&nbsp;
+				カテゴリ名:&nbsp;
 			</td>
 			<td>
 				<input type="text" name="category_name"><br/>
@@ -46,6 +44,62 @@
 		</tr>
 	</table>
 
-    <input type="submit" value="create!">
+    <input type="submit" value="保存">
 </form>
+
+<script>
+
+function inputCheck() {
+	console.log('hello');
+	var isValid = true;
+	var msg = '';
+	// 設定開始
+	if(document.form1.exam_id.value == 'blank'){
+		msg += '試験を選択してください。\n';
+		isValid = false
+	}
+	if(document.form1.category_name.value == ''){
+		msg += 'カテゴリ名を入力してください。\n';
+		isValid = false
+	}
+	// 設定終了
+	if(isValid){
+		return true;
+	} else {
+		window.alert(msg);
+		return false;
+	}
+}
+
+function onExamChanged() {
+	// オプションのリスト
+	var options = document.form1.exam_id.options;
+	// 選択されている値を取得
+	var value;
+	for(var i=0; i<options.length; i++) {
+		if( options[i].selected ){
+			value = options[i].value;
+			break;
+		}
+	}
+	console.log(value);
+	postForm(value);
+}
+
+//TODO:共通化する
+function postForm(value){
+    var form = document.createElement( 'form' );
+    document.body.appendChild( form );
+    var input = document.createElement( 'input' );
+    input.setAttribute( 'type' , 'hidden' );
+    input.setAttribute( 'name' , 'exam_id' );
+    input.setAttribute( 'value' , value );
+    form.appendChild( input );
+    form.setAttribute( 'action' , '/on_exam_changed' );
+    //form.setAttribute( 'method' , 'post or get' );
+    form.setAttribute( 'method' , 'post' );
+    form.submit();
+}
+</script>
+
 </html>
