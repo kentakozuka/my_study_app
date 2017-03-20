@@ -1,17 +1,16 @@
 <html>
-<form method="post" action="/create_question">
+<form method="post" name="form1" action="/create_question">
 
-	<h1>Register New Question</h1>
+	<h1>問題登録</h1>
 
 	<table>
 		<tr>
 			<td>
-				Exam Name:&nbsp;
+				試験:&nbsp;
 			</td>
 			<td>
 				<!-- ドロップダウンを表示 -->
-				<select name="exam_id" size="1">
-					<option value="blank" selected="selected" >--試験を選択--</option>
+				<select name="exam_id" size="1" onChange="onExamChanged();">
 					<% examList.forEach(function(exam) { %>
 						<option value = "<%= exam.ID %>" >
 							<%= exam.EXAM_NAME %>
@@ -22,13 +21,12 @@
 		</tr>
 		<tr>
 			<td>
-				Category 1:&nbsp;
+				親カテゴリ:&nbsp;
 			</td>
 			<td>
 				<!-- ドロップダウンを表示 -->
-				<select name="parent_question_category" size="1">
-					<option value="blank" selected="selected" >--カテゴリ1を選択--</option>
-					<% questionCategoryList.forEach(function(questionCategory) { %>
+				<select name="parent_question_category" size="1" onChange="onParentCategoryChanged();">
+					<% parentQuestionCategoryList.forEach(function(questionCategory) { %>
 						<option value = "<%= questionCategory.ID %>" >
 							<%= questionCategory.CATEGORY_NAME %>
 						</option>
@@ -38,13 +36,12 @@
 		</tr>
 		<tr>
 			<td>
-				Category 2:&nbsp;
+				子カテゴリ:&nbsp;
 			</td>
 			<td>
 				<!-- ドロップダウンを表示 -->
-				<select name="parent_question_category" size="1">
-					<option value="blank" selected="selected" >--カテゴリ2を選択--</option>
-					<% questionCategoryList.forEach(function(questionCategory) { %>
+				<select name="child_question_category" size="1">
+					<% childQuestionCategoryList.forEach(function(questionCategory) { %>
 						<option value = "<%= questionCategory.ID %>" >
 							<%= questionCategory.CATEGORY_NAME %>
 						</option>
@@ -54,7 +51,15 @@
 		</tr>
 		<tr>
 			<td>
-				Type:&nbsp;
+				タイトル:&nbsp;
+			</td>
+			<td>
+				<input type="text" name="title">
+			</td>
+		</tr>
+		<tr>
+			<td>
+				種別:&nbsp;
 			</td>
 			<td>
 				<input type="radio" name="type" value="SELECT" onclick="onTypeChanged(0)" checked>４択問題
@@ -63,7 +68,7 @@
 		</tr>
 		<tr>
 			<td>
-				Body
+				問題分
 			</td>
 			<td>
     			<textarea name="body" rows="8" cols="40"></textarea><br/>
@@ -71,7 +76,7 @@
 		</tr>
 		<tr class="selection">
 			<td>
-				Selection 1:&nbsp;
+				選択肢 1:&nbsp;
 			</td>
 			<td>
 				<input type="text" name="selection_1"><br/>
@@ -79,7 +84,7 @@
 		</tr>
 		<tr class="selection">
 			<td>
-				Selection 2:&nbsp;
+				選択肢 2:&nbsp;
 			</td>
 			<td>
 				<input type="text" name="selection_2"><br/>
@@ -87,7 +92,7 @@
 		</tr>
 		<tr class="selection">
 			<td>
-				Selection 3:&nbsp;
+				選択肢 3:&nbsp;
 			</td>
 			<td>
 				<input type="text" name="selection_3"><br/>
@@ -95,7 +100,7 @@
 		</tr>
 		<tr class="selection">
 			<td>
-				Selection 4:&nbsp;
+				選択肢 4:&nbsp;
 			</td>
 			<td>
 				<input type="text" name="selection_4">
@@ -111,7 +116,7 @@
 		</tr>
 		<tr>
 			<td>
-				Explanation
+				解説
 			</td>
 			<td>
     			<textarea name="explanation" rows="8" cols="40"></textarea><br/>
@@ -119,7 +124,7 @@
 		</tr>
 		<tr>
 			<td>
-				Reference URL 1:&nbsp;
+				参考URL 1:&nbsp;
 			</td>
 			<td>
 				<input type="text" name="ref_url_1"><br/>
@@ -128,7 +133,7 @@
 		</tr>
 		<tr>
 			<td>
-				Reference URL 2:&nbsp;
+				参考URL 2:&nbsp;
 			</td>
 			<td>
 				<input type="text" name="ref_url_2"><br/>
@@ -136,7 +141,7 @@
 		</tr>
 		<tr>
 			<td>
-				Reference URL 3:&nbsp;
+				参考URL 3:&nbsp;
 			</td>
 			<td>
 				<input type="text" name="ref_url_3"><br/>
@@ -144,15 +149,15 @@
 		</tr>
 		<tr>
 			<td>
-				Reference URL 4:&nbsp;
+				参考URL 4:&nbsp;
 			</td>
 			<td>
-				<input type="text" name="ref_url4"><br/>
+				<input type="text" name="ref_url_4"><br/>
 			</td>
 		</tr>
 		<tr>
 			<td>
-				Question Source:&nbsp;
+				問題ソース:&nbsp;
 			</td>
 			<td>
     			<input type="text" name="qustion_src"><br/>
@@ -160,7 +165,7 @@
 		</tr>
 	</table>
 
-    <input type="submit" value="create!">
+    <input type="submit" value="保存">
 </form>
 <script>
 
@@ -178,6 +183,110 @@ function onTypeChanged(num) {
 			elements[i].style.display="none";
 		}
 	}
+}
+
+/**
+ * 入力値チェック関数
+**/
+function inputCheck() {
+	console.log('hello');
+	var isValid = true;
+	var msg = '';
+	// 設定開始
+	if(document.form1.exam_id.value == 'blank'){
+		msg += '試験を選択してください。\n';
+		isValid = false
+	}
+	if(document.form1.category_name.value == ''){
+		msg += 'カテゴリ名を入力してください。\n';
+		isValid = false
+	}
+	// 設定終了
+	if(isValid){
+		return true;
+	} else {
+		window.alert(msg);
+		return false;
+	}
+}
+
+/**
+ * 試験ドロップダウン値変更時のコールバック関数
+**/
+function onExamChanged() {
+	// オプションのリスト
+	var options = document.form1.exam_id.options;
+	// 選択されている値を取得
+	var value;
+	for(var i=0; i<options.length; i++) {
+		if( options[i].selected ){
+			value = options[i].value;
+			break;
+		}
+	}
+	console.log(value);
+	postForm([
+		{		name:	'exam_id'
+			,	value:	value
+		}
+	]);
+}
+
+/**
+ * 親カテゴリドロップダウン値変更時のコールバック関数
+**/
+function onParentCategoryChanged() {
+	// オプションのリスト
+	var examOptions			= document.form1.exam_id.options;
+	// 選択されている値を取得
+	var selectedExamIdValue;
+	for(var i=0; i < examOptions.length; i++) {
+		if( examOptions[i].selected ){
+			selectedExamIdValue = examOptions[i].value;
+			break;
+		}
+	}
+	var parentCategoryOptions	= document.form1.parent_question_category.options;
+	// 選択されている値を取得
+	var selectedCategoryValue;
+	for(var i=0; i < parentCategoryOptions.length; i++) {
+		if( parentCategoryOptions[i].selected ){
+			selectedCategoryValue = parentCategoryOptions[i].value;
+			break;
+		}
+	}
+	postForm([
+		{		name:	'exam_id'
+			,	value:	selectedExamIdValue
+		},
+		{		name:	'parent_question_category'
+			,	value:	selectedCategoryValue
+		}
+	]);
+}
+//TODO:共通化する
+/**
+ * POSTを送信する関数
+ * @param 送信したいinput分のnameとvalueプロパティを持った配列
+**/
+function postForm(inputArray){
+
+    var form = document.createElement( 'form' );
+    document.body.appendChild( form );
+
+	//引数のArrayの長さ分inputを登録する
+	for(var i=0; i < inputArray.length; i++) {
+    	var input = document.createElement( 'input' );
+    	input.setAttribute( 'type',		'hidden' );
+    	input.setAttribute( 'name',		inputArray[i].name );
+    	input.setAttribute( 'value',	inputArray[i].value );
+    	form.appendChild( input );
+	}
+
+    form.setAttribute('action',	'/edit_question' );
+    form.setAttribute('method',	'post' );
+
+    form.submit();
 }
 </script>
 </html>

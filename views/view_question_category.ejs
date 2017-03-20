@@ -1,19 +1,25 @@
 <html>
-	<h1><%= title %></h1>
+	<h1>試験カテゴリ一覧</h1>
 	<table>
 		<tr>
 			<th>
-				Category Name
+				ID
 			</th>
 			<th>
-				Exam Name
+				カテゴリ名
 			</th>
 			<th>
-				Parent Category Name
+				試験名
+			</th>
+			<th>
+				親カテゴリ名
 			</th>
 		<tr>
 		<% recordList.forEach(function(record) { if(record){ %>
 			<tr>
+				<td>
+					<%= record.ID %>
+				</td>
 				<td>
 					<%= record.CATEGORY_NAME %>
 				</td>

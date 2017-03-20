@@ -1,51 +1,24 @@
 var NewExamController = function(app){
 
 	//Modules
-	var connection = require('../mysqlConnection'); 
+	var connection		= require('../mysqlConnection'); 
+	var sqlCommon		= require('../lib/SqlOperationLib');
+	var commonConst		= require('../lib/commonConst');
 
-	// /create_examにPOSTした場合の処理
-	app.post('/create_exam', function(req, res) {
-		console.log(req.body.exam_name);
-		//インサートするテーブル名
-		var table = 'EXAM';
-		//フィールド
-		var fields  = {
-			EXAM_NAME: req.body.exam_name
-		};
-		connection.query(
-			'INSERT INTO' + ' ' + table +' '+ 'SET ?'
-		,	fields
-		,	function(err, result){
-				//ERROR
-				if (err) {
-					// 接続失敗
-					console.log("レコードのインサートに失敗しました。");
-					console.log(err);
-					return;
-				}
-				//SUCCESS
-				connection.end(
-					function() {
-						var rows = result;
-						console.log("インサートに成功しました。" );
-						console.log(result);
-					}
-				);
-			}
-		);
-		connection.query(
-			'SELECT * FROM' + ' ' + table
-			, function (err, results, fields) {
-				//ERROR
-				if (err) { console.log('err: ' + err); }
-	
-				//SUCCESS
-				res.render('view_exam', {
-					title: 'EXAM',
-					examList: results
+	// /view_question_categoryにGETした場合の処理
+	app.get('/view_question_category', function(req, res) {
+		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_QUESTION_CATEGORY)
+		//ルーティング
+		.spread(
+			//セレクト結果を受け取る
+			function(results) {
+				console.log(results);
+				//一覧に飛ばす
+				res.render(commonConst.PAGE_ID_VIEW_QUESTION_CATEGORY, {
+					recordList:	results
 				});
 			}
-		)
+		);
 	});
 };
 module.exports = NewExamController

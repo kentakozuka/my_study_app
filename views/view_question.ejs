@@ -1,0 +1,46 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../style/style.css" type="text/css" >
+</head>
+<body>
+	<h1>問題一覧</h1>
+	<table>
+		<tr>
+			<th>
+				#
+			</th>
+			<th>
+				タイトル
+			</th>
+			<th>
+				試験名
+			</th>
+			<th>
+				カテゴリ
+			</th>
+			<th>
+				種別
+			</th>
+		<tr>
+		<% recordList.forEach(function(record) { if(record){ %>
+			<tr>
+				<td>
+					<%= record.ID %>
+				</td>
+				<td>
+					<%= record.TITLE %></p>
+				</td>
+				<td>
+					<%= record.EXAM_ID %>
+				</td>
+				<td>
+					<%= record.CATEGORY_ID %></p>
+				</td>
+				<td>
+					<%= record.TYPE %></p>
+				</td>
+			</tr>
+		<% }}); %>
+	</table>
+</body>
+</html>
