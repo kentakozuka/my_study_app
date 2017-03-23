@@ -15,6 +15,7 @@ var EditQuestionController = function(app){
 
 	// /edit_qustionにGETした場合の処理
 	app.get('/edit_question', function(req, res) {
+		console.log('hello');
 
 		//TODO: ドロップダウン作成
 		//TODO: promise並列化
@@ -57,6 +58,7 @@ var EditQuestionController = function(app){
 						examList					: resultArray[0]
 					,	parentQuestionCategoryList	: resultArray[1]
 					,	childQuestionCategoryList	: resultArray[2]
+					,	doesDisplay					: false
 				});
 			}
 		)
@@ -160,7 +162,7 @@ var EditQuestionController = function(app){
 		var fields  = {
 				TITLE			: req.body.title
 			,	EXAM_ID			: req.body.exam_id
-			,	CATEGORY_ID		: req.body.child_question_category_id
+			,	CATEGORY_ID		: req.body.child_question_category
 			,	TYPE			: req.body.type
 			,	BODY			: req.body.body
 			,	IMG_QUESTION_1	: req.body.img_question_1

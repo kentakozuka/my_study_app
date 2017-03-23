@@ -21,6 +21,9 @@
 			<th>
 				種別
 			</th>
+			<th>
+				削除
+			</th>
 		<tr>
 		<% recordList.forEach(function(record) { if(record){ %>
 			<tr>
@@ -39,8 +42,35 @@
 				<td>
 					<%= record.TYPE %></p>
 				</td>
+				<td>
+					<button type="button" value="<%= record.ID %>" onclick="confirmDelete(<%= record.ID %>)" >
+						削除
+					</button>
+				</td>
 			</tr>
 		<% }}); %>
 	</table>
 </body>
+<script>
+
+function confirmDelete(id) {
+	if(window.confirm('削除します。よろしいですか？')){
+		postForm(id);
+	}
+}
+
+//TODO:共通化する
+function postForm(value){
+    var form = document.createElement( 'form' );
+    document.body.appendChild( form );
+    var input = document.createElement( 'input' );
+    input.setAttribute( 'type' , 'hidden' );
+    input.setAttribute( 'name' , 'question_id' );
+    input.setAttribute( 'value' , value );
+    form.appendChild( input );
+    form.setAttribute( 'action' , '/view_question' );
+    form.setAttribute( 'method' , 'post' );
+    form.submit();
+}
+</script>
 </html>

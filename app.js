@@ -23,14 +23,17 @@ EditExamController				= require("./controllers/EditExamController.js"				)(app);
 EditQuestionCategoryController	= require("./controllers/EditQuestionCategoryController.js"	)(app);
 EditQuestionController			= require("./controllers/EditQuestionController.js"			)(app);
 EditUserController				= require("./controllers/EditUserController.js"				)(app);
+
 IndexController					= require("./controllers/IndexController.js"				)(app);
-QuestionController				= require("./controllers/QuestionController.js"				)(app);
 SelectExamController			= require("./controllers/SelectExamController.js"			)(app);
 SelectQuestionController		= require("./controllers/SelectQuestionController.js"		)(app);
+AnswerQuestionController		= require("./controllers/AnswerQuestionController.js"		)(app);
+
 ViewExamController				= require("./controllers/ViewExamController.js"				)(app);
-ViewQuestionCategory			= require("./controllers/ViewQuestionCategory.js"			)(app);
+ViewQuestionCategoryController	= require("./controllers/ViewQuestionCategoryController.js"	)(app);
 ViewResultController			= require("./controllers/ViewResultController.js"			)(app);
 ViewUserController				= require("./controllers/ViewUserController.js"				)(app);
+ViewQuestionController			= require("./controllers/ViewQuestionController.js"			)(app);
 
 
 // // if accessed to /about
