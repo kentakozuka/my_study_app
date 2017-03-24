@@ -28,6 +28,7 @@ var AnswerQuestionController = function(app){
 		queryArray.push('IN'								);
 		queryArray.push('('								);
 		//カテゴリを追加
+		//TODO: 選択されたカテゴリが１つのみだと配列でないのでforEachでエラーがでる
 		req.body.child_question_category.forEach(function(val, index, array) {
 			queryArray.push(val);
 			//最後の要素以外はカンマを入れる

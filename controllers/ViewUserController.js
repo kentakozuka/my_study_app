@@ -1,51 +1,33 @@
-var NewExamController = function(app){
+/**
+* ユーザ一覧画面のコントローラ
+*
+* Created by Kozuka
+* Created on 2017/03/24
+* Updated by 
+* Updated on 
+**/
+var UserViewController = function(app){
 
 	//Modules
-	var connection = require('../mysqlConnection'); 
+	var connection		= require('../mysqlConnection'); 
+	var sqlCommon		= require('../lib/SqlOperationLib');
+	var commonConst		= require('../lib/commonConst');
 
-	// /create_examにPOSTした場合の処理
-	app.post('/create_exam', function(req, res) {
-		console.log(req.body.exam_name);
-		//インサートするテーブル名
-		var table = 'EXAM';
-		//フィールド
-		var fields  = {
-			EXAM_NAME: req.body.exam_name
-		};
-		connection.query(
-			'INSERT INTO' + ' ' + table +' '+ 'SET ?'
-		,	fields
-		,	function(err, result){
-				//ERROR
-				if (err) {
-					// 接続失敗
-					console.log("レコードのインサートに失敗しました。");
-					console.log(err);
-					return;
-				}
-				//SUCCESS
-				connection.end(
-					function() {
-						var rows = result;
-						console.log("インサートに成功しました。" );
-						console.log(result);
-					}
-				);
-			}
-		);
-		connection.query(
-			'SELECT * FROM' + ' ' + table
-			, function (err, results, fields) {
-				//ERROR
-				if (err) { console.log('err: ' + err); }
-	
-				//SUCCESS
-				res.render('view_exam', {
-					title: 'EXAM',
-					examList: results
+	// /user_viewにGETした場合の処理
+	app.get('/view_user', function(req, res) {
+
+		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_USER)
+		//ルーティング
+		.spread(
+			//セレクト結果を受け取る
+			function(results) {
+				console.log(results);
+				//一覧に飛ばす
+				res.render(commonConst.PAGE_ID_VIEW_USER, {
+					recordList:	results
 				});
 			}
-		)
+		);
 	});
 };
-module.exports = NewExamController
+module.exports = UserViewController

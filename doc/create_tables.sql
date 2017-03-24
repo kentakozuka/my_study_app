@@ -49,6 +49,7 @@ CREATE TABLE USER (
 		ID INT AUTO_INCREMENT
 	,	USER_NAME VARCHAR(20)
 	,	USER_PASSWORD VARCHAR(30)
+	,	EMAIL VARCHAR(255)
 	,	CREATED_DATETIME timestamp not null default current_timestamp
 	,	UPDATED_DATETIME timestamp not null default current_timestamp on update current_timestamp
 	,	PRIMARY KEY (ID)
