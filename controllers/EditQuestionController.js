@@ -6,12 +6,7 @@
 * Updated by 
 * Updated on 
 **/
-var EditQuestionController = function(app){
-
-	//Modules
-	var connection		= require('../mysqlConnection'); 
-	var sqlCommon		= require('../lib/SqlOperationLib');
-	var commonConst		= require('../lib/commonConst');
+var EditQuestionController = function(app, CommonConst, DbConnection, SqlCommon){
 
 	// /edit_qustionにGETした場合の処理
 	app.get('/edit_question', function(req, res) {
@@ -22,7 +17,7 @@ var EditQuestionController = function(app){
 
 		var resultArray = [];
 		//試験を取得
-		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_EXAM)
+		SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_EXAM)
 		//セレクト結果を受け取る
 		.spread(
 			function(result) {
@@ -54,7 +49,7 @@ var EditQuestionController = function(app){
 				resultArray.push(category2Array);
 
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_EDIT_QUESTION, {
+				res.render(CommonConst.PAGE_ID_EDIT_QUESTION, {
 						examList					: resultArray[0]
 					,	parentQuestionCategoryList	: resultArray[1]
 					,	childQuestionCategoryList	: resultArray[2]
@@ -71,7 +66,7 @@ var EditQuestionController = function(app){
 
 		var resultArray = [];
 		//試験を取得
-		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_EXAM)
+		SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_EXAM)
 		//セレクト結果を受け取る
 		.spread(
 			function(result) {
@@ -100,7 +95,7 @@ var EditQuestionController = function(app){
 				//選択したIDをwhereに設定して取得するのがベスト
 				//しかし今はめんどくさいのでやらない
 				//全部取得して該当のものだけとる
-				return sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_QUESTION_CATEGORY);
+				return SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_QUESTION_CATEGORY);
 			}
 		)
 		.spread(
@@ -144,7 +139,7 @@ var EditQuestionController = function(app){
 				resultArray.push(childCategoryArray);
 
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_EDIT_QUESTION, {
+				res.render(CommonConst.PAGE_ID_EDIT_QUESTION, {
 						examList					: resultArray[0]
 					,	parentQuestionCategoryList	: resultArray[1]
 					,	childQuestionCategoryList	: resultArray[2]
@@ -187,12 +182,12 @@ var EditQuestionController = function(app){
 		};
 
 		//インサート処理
-		sqlCommon.insertRecord(connection, commonConst.TABLE_NAME_QUESTION, fields)
+		SqlCommon.insertRecord(DbConnection, CommonConst.TABLE_NAME_QUESTION, fields)
 		//セレクト処理
     	.then(
 			function() {
 				console.log('insert success!');
-				return sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_QUESTION)
+				return SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_QUESTION)
 			}
 		)
 		//ルーティング
@@ -201,7 +196,7 @@ var EditQuestionController = function(app){
 			function(results) {
 				console.log(results);
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_VIEW_QUESTION, {
+				res.render(CommonConst.PAGE_ID_VIEW_QUESTION, {
 					recordList:	results
 				});
 			}

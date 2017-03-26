@@ -6,13 +6,7 @@
 * Updated by 
 * Updated on 
 **/
-var EditExamController = function(app){
-
-	//Modules
-	var connection		= require('../mysqlConnection'); 
-	var sqlCommon		= require('../lib/SqlOperationLib');
-	var commonConst		= require('../lib/commonConst');
-
+var EditExamController = function(app, CommonConst, DbConnection, SqlCommon){
 
 	// /edit_examにアクセスした場合のルーティング
 	app.get('/edit_exam', function(req, res) {
@@ -30,12 +24,12 @@ var EditExamController = function(app){
 		};
 
 		//インサート処理
-		sqlCommon.insertRecord(connection, commonConst.TABLE_NAME_EXAM, fields)
+		SqlCommon.insertRecord(DbConnection, CommonConst.TABLE_NAME_EXAM, fields)
 		//セレクト処理
     	.then(
 			function() {
 				console.log('insert success!');
-				return sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_EXAM)
+				return SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_EXAM)
 			}
 		)
 		//ルーティング
@@ -44,7 +38,7 @@ var EditExamController = function(app){
 			function(results) {
 				console.log(results);
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_VIEW_EXAM, {
+				res.render(CommonConst.PAGE_ID_VIEW_EXAM, {
 					title:		'EXAM',
 					recordList:	results
 				});

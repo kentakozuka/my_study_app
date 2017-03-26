@@ -1,0 +1,37 @@
+<html>
+<form method="post" action="/create_exam">
+
+	<h1>こんにんちは<%= user.USER_NAME %>さん</h1>
+
+    <% if (typeof user !== 'undefined') { %>
+        <span class="login-user"><%= user.USER_NAME %>さんとしてログインしています</span>
+    <% } %>
+	<br/>
+	<br/>
+	<input type="button" onclick="location.href='/select_question'" value="問題に進む">
+	<br/>
+	<br/>
+	<h2>登録画面</h2>
+	<a href="/edit_exam" class="btn">試験登録</a></br>
+	<br/>
+	<a href="/edit_question_category" class="btn">カテゴリ登録</a></br>
+	<br/>
+	<a href="/edit_question" class="btn">問題登録</a></br>
+	<br/>
+	<h2>一覧画面</h2>
+	<a href="/view_exam" class="btn">試験一覧</a></br>
+	<br/>
+	<a href="/view_question_category" class="btn">カテゴリ一覧</a></br>
+	<br/>
+	<a href="/view_question" class="btn">問題一覧</a></br>
+	<br/>
+	<a href="/view_user" class="btn">ユーザ一覧</a></br>
+	<br/>
+	<br/>
+	<br/>
+	<br/>
+	<a href="/user_log_in" class="btn">トップへもどる</a>
+	<br/>
+	<a href="/user_log_out" class="btn">ログアウト</a></br>
+</form>
+</html>

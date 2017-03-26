@@ -6,12 +6,7 @@
 * Updated by 
 * Updated on 
 **/
-var EditQuestionCategoryController = function(app){
-
-	//Modules
-	var connection		= require('../mysqlConnection'); 
-	var sqlCommon		= require('../lib/SqlOperationLib');
-	var commonConst		= require('../lib/commonConst');
+var EditQuestionCategoryController = function(app, CommonConst, DbConnection, SqlCommon){
 
 	// 試験名のドロップダウンを変更したときにアクセスした場合のルーティング
 	app.post('/on_exam_changed', function(req, res) {
@@ -19,7 +14,7 @@ var EditQuestionCategoryController = function(app){
 		console.log(req.body.exam_id);
 
 		var resultArray = [];
-		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_EXAM)
+		SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_EXAM)
 		//ルーティング
 		.spread(
 			//セレクト結果を受け取る
@@ -44,7 +39,7 @@ var EditQuestionCategoryController = function(app){
 				//選択したIDをwhereに設定して取得するのがベスト
 				//しかし今はめんどくさいのでやらない
 				//全部取得して該当のものだけとる
-				return sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_QUESTION_CATEGORY);
+				return SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_QUESTION_CATEGORY);
 			}
 		)
 		.spread(
@@ -65,7 +60,7 @@ var EditQuestionCategoryController = function(app){
 				//配列に詰める
 				resultArray.push(categoryArrayByExam);
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_EDIT_QUESTION_CATEGORY, {
+				res.render(CommonConst.PAGE_ID_EDIT_QUESTION_CATEGORY, {
 						examList			: resultArray[0]
 					,	questionCategoryList: resultArray[1]
 				});
@@ -76,7 +71,7 @@ var EditQuestionCategoryController = function(app){
 	app.get('/edit_question_category', function(req, res) {
 
 		var resultArray = [];
-		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_EXAM)
+		SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_EXAM)
 		//ルーティング
 		.spread(
 			//セレクト結果を受け取る
@@ -93,7 +88,7 @@ var EditQuestionCategoryController = function(app){
 				//配列に詰める
 				resultArray.push(categoryArray);
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_EDIT_QUESTION_CATEGORY, {
+				res.render(CommonConst.PAGE_ID_EDIT_QUESTION_CATEGORY, {
 						examList			: resultArray[0]
 					,	questionCategoryList: resultArray[1]
 				});
@@ -119,12 +114,12 @@ var EditQuestionCategoryController = function(app){
 		}
 
 		//インサート処理
-		sqlCommon.insertRecord(connection, commonConst.TABLE_NAME_QUESTION_CATEGORY, fields)
+		SqlCommon.insertRecord(DbConnection, CommonConst.TABLE_NAME_QUESTION_CATEGORY, fields)
 		//セレクト処理
     	.then(
 			function() {
 				console.log('insert success!');
-				return sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_QUESTION_CATEGORY)
+				return SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_QUESTION_CATEGORY)
 			}
 		)
 		//ルーティング
@@ -133,7 +128,7 @@ var EditQuestionCategoryController = function(app){
 			function(results) {
 				console.log(results);
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_VIEW_QUESTION_CATEGORY, {
+				res.render(CommonConst.PAGE_ID_VIEW_QUESTION_CATEGORY, {
 					title:		'EXAM',
 					recordList:	results
 				});

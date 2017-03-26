@@ -6,24 +6,19 @@
 * Updated by 
 * Updated on 
 **/
-var UserViewController = function(app){
-
-	//Modules
-	var connection		= require('../mysqlConnection'); 
-	var sqlCommon		= require('../lib/SqlOperationLib');
-	var commonConst		= require('../lib/commonConst');
+var UserViewController = function(app, CommonConst, DbConnection, SqlCommon){
 
 	// /user_viewにGETした場合の処理
 	app.get('/view_user', function(req, res) {
 
-		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_USER)
+		SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_USER)
 		//ルーティング
 		.spread(
 			//セレクト結果を受け取る
 			function(results) {
 				console.log(results);
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_VIEW_USER, {
+				res.render(CommonConst.PAGE_ID_VIEW_USER, {
 					recordList:	results
 				});
 			}

@@ -1,7 +1,4 @@
-var NewExamController = function(app){
-
-	//Modules
-	var connection = require('../mysqlConnection'); 
+var NewExamController = function(app, CommonConst, DbConnection, SqlCommon){
 
 	// /create_examにPOSTした場合の処理
 	app.post('/create_exam', function(req, res) {
@@ -12,7 +9,7 @@ var NewExamController = function(app){
 		var fields  = {
 			EXAM_NAME: req.body.exam_name
 		};
-		connection.query(
+		DbConnection.query(
 			'INSERT INTO' + ' ' + table +' '+ 'SET ?'
 		,	fields
 		,	function(err, result){
@@ -24,7 +21,7 @@ var NewExamController = function(app){
 					return;
 				}
 				//SUCCESS
-				connection.end(
+				DbConnection.end(
 					function() {
 						var rows = result;
 						console.log("インサートに成功しました。" );
@@ -33,7 +30,7 @@ var NewExamController = function(app){
 				);
 			}
 		);
-		connection.query(
+		DbConnection.query(
 			'SELECT * FROM' + ' ' + table
 			, function (err, results, fields) {
 				//ERROR

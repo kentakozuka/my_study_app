@@ -6,40 +6,75 @@
 * Updated by 
 * Updated on 
 **/
-var UserLogInController = function(app){
+var UserLogInController = function(app, CommonConst, DbConnection, SqlCommon){
 
-	//Modules
-	var connection		= require('../mysqlConnection'); 
-	var sqlCommon		= require('../lib/SqlOperationLib');
-	var commonConst		= require('../lib/commonConst');
-
-	
-	app.get('/', function(req, res, next) {
-  		if (req.session.user_id) {
-    		res.redirect('/');
+	//ログイン画面にGETしたときの処理
+	app.get('/user_log_in', function(req, res, next) {
+		//セッション情報がある場合
+  		if(req.session && req.session.user_id) {
+			//メニュー画面にリダイレクト
+    		res.redirect('/menu');
+		//セッション情報がない場合
   		} else {
-    		res.render('login', {
-      		title: 'ログイン'
-    		});
+			//ログイン画面のレンダリング実行
+    		res.render(CommonConst.PAGE_ID_USER_LOG_IN);
   		}
 	});
 	
-	app.post('/', function(req, res, next) {
+	//ログインボタン押下時
+	app.post('/user_log_in', function(req, res, next) {
+
+		//debug
+		console.log(req.body);
+
   		var email = req.body.email;
   		var password = req.body.password;
-  		var query = 'SELECT user_id FROM users WHERE email = "' + email + '" AND password = "' + password + '" LIMIT 1';
-  		connection.query(query, function(err, rows) {
-    		var userId = rows.length? rows[0].user_id: false;
-    		if (userId) {
-      		req.session.user_id = userId;
-      		res.redirect('/');
-    		} else {
-      		res.render('login', {
-        		title: 'ログイン',
-        		noUser: 'メールアドレスとパスワードが一致するユーザーはいません'
-      		});
-    		}
-  		});
+		
+		//クエリ作成
+		var queryArray = [];
+		queryArray.push('SELECT'							);
+		queryArray.push('*'									);
+		queryArray.push('FROM'								);
+		queryArray.push(CommonConst.TABLE_NAME_USER			);
+		queryArray.push('WHERE'								);
+		queryArray.push('USER_NAME='						);
+		queryArray.push('\'' + req.body.user_name + '\''	);
+		queryArray.push('AND'								);
+		queryArray.push('USER_PASSWORD='					);
+		queryArray.push('\'' + req.body.password + '\''		);
+		queryArray.push('LIMIT 1'							);
+		//クエリを結合
+		var query = queryArray.join(' ');
+
+		//debug
+		console.log(query);
+
+		//クエリ実行
+		SqlCommon.manipulateRecord(DbConnection, query)
+		.spread(
+			//セレクト結果を受け取る
+			function(results) {
+
+				//debug
+				console.log(results);
+
+				//結果を判定
+    			var user = results.length? results[0]: false;
+				//1件以上の場合
+    			if (user) {
+					//セッションにユーザIDをいれる
+      				req.session.user = user;
+					//メニューにリダイレクト
+      				res.redirect('/menu');
+				//0件の場合
+    			} else {
+					//ログイン画面に戻す
+      				res.render(CommonConst.PAGE_ID_USER_LOG_IN, {
+        				noUser: 'ユーザ名とパスワードが一致するユーザーはいません'
+      				});
+      			}
+			}
+		);
 	});
 };
 module.exports = UserLogInController

@@ -1,16 +1,11 @@
-var SelectQuestionController = function(app){
-
-	//Modules
-	var connection		= require('../mysqlConnection'); 
-	var sqlCommon		= require('../lib/SqlOperationLib');
-	var commonConst		= require('../lib/commonConst');
+var SelectQuestionController = function(app, CommonConst, DbConnection, SqlCommon){
 
 	// /select_qustionにGETした場合の処理
 	app.get('/select_question', function(req, res) {
 
 		var resultArray = [];
 		//試験を取得
-		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_EXAM)
+		SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_EXAM)
 		//セレクト結果を受け取る
 		.spread(
 			function(result) {
@@ -26,7 +21,7 @@ var SelectQuestionController = function(app){
 				var categoryMap = new Map();
 
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_SELECT_QUESTION, {
+				res.render(CommonConst.PAGE_ID_SELECT_QUESTION, {
 						examList					: resultArray[0]
 					,	categoryMap	: categoryMap
 					,	doesDisplay					: false
@@ -40,7 +35,7 @@ var SelectQuestionController = function(app){
 
 		var resultArray = [];
 		//試験を取得
-		sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_EXAM)
+		SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_EXAM)
 		//セレクト結果を受け取る
 		.spread(
 			function(result) {
@@ -66,7 +61,7 @@ var SelectQuestionController = function(app){
 				//選択したIDをwhereに設定して取得するのがベスト
 				//しかし今はめんどくさいのでやらない
 				//全部取得して該当のものだけとる
-				return sqlCommon.selectRecord(connection, commonConst.TABLE_NAME_QUESTION_CATEGORY);
+				return SqlCommon.selectRecord(DbConnection, CommonConst.TABLE_NAME_QUESTION_CATEGORY);
 			}
 		)
 		.spread(
@@ -109,7 +104,7 @@ var SelectQuestionController = function(app){
 				console.log(categoryMap);
 
 				//一覧に飛ばす
-				res.render(commonConst.PAGE_ID_SELECT_QUESTION, {
+				res.render(CommonConst.PAGE_ID_SELECT_QUESTION, {
 						examList	: resultArray[0]
 					,	categoryMap	: categoryMap
 					,	doesDisplay	: true

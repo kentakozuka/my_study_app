@@ -9,7 +9,7 @@
 </head>
 <body>
 <div class="wrapper">
-    <p class="main-title"><%= title %></p>
+    <p class="main-title">新規ユーザ登録</p>
     <form action="/user_sign_up" method="post" class="board-form">
         <span class="label">ユーザー名</span><input type="text" name="user_name" class="input" required><br>
         <br>
@@ -19,8 +19,8 @@
         <br>
         <button type="submit" class="submit">新規会員登録</button>
     </form>
-    <% if (typeof emailExists !== 'undefined') { %>
-        <p class="error"><%= emailExists %></p>
+    <% if (typeof userNameExists !== 'undefined') { %>
+        <p class="error"><%= userNameExists %></p>
     <% } %>
     <a href="/" class="btn">トップへもどる</a>
 </div>
