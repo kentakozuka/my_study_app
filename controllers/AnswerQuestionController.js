@@ -24,8 +24,11 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 			return;
 		}
 
-		//TODO: 履歴に結果保存
-		saveHistory(req.body.pastQuestion, req.body.isCorrent);
+		//履歴に結果保存
+		saveHistory(req.body.pastQuestion, req.body.isCorrent)
+		.then(function() {
+			console.log('insert history finished');
+		});
 
 		//次の問題がない場合
 		if(!CommonUtils.exTypeOf('undefined', req.body.commingQuestion) && req.body.commingQuestion.length == 0) {
@@ -39,13 +42,13 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 		 * カテゴリで絞る
 		 **/
 		var queryArray = [];
-		queryArray.push('SELECT'							);
+		queryArray.push('SELECT'						);
 		queryArray.push('*'								);
 		queryArray.push('FROM'							);
 		queryArray.push(CommonConst.TABLE_NAME_QUESTION	);
 		queryArray.push('WHERE'							);
 		queryArray.push('CATEGORY_ID'					);
-		queryArray.push('IN'								);
+		queryArray.push('IN'							);
 		queryArray.push('('								);
 		//カテゴリを追加
 		var childCatQuesArray = [];
@@ -123,8 +126,6 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 				}
 
 				console.log(nextQuestion);
-
-				console.log('hello');
 				console.log(commingQuestionArray);
 
 				//一覧に飛ばす
@@ -140,7 +141,9 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 
 	/**
 	* 解答結果を保存するメソッド
-	* @param boolean 解答結果
+	* TODO:selectとinsertを非同期にする
+	* @param obj		問題
+	* @param boolean	解答結果
 	**/
 	var saveHistory = function(pastQuestion, isCorrent){
 
@@ -156,11 +159,12 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 		queryArray.push('AND'									);
 		queryArray.push('QUESTION_ID ='							);
 		queryArray.push(pastQuestion.ID							);
+		queryArray.push('ORDER BY CREATED_DATETIME DESC'		);
 		//クエリを結合
 		var query = queryArray.join(' ');
 		//debug
 		console.log(query);
-		//
+		//クエリ実行
 		SqlCommon.manipulateRecord(DbConnection, query)
 		//ルーティング
 		.spread(
@@ -185,8 +189,6 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 				return sqlCommon.insertRecord(DbConnection, CommonConst.TABLE_NAME_STUDY_HISTORY, fields);
 			}
 		);
-
-		//保存する
 	}
 };
 module.exports = AnswerQuestionController;
