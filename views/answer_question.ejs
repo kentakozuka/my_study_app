@@ -101,10 +101,8 @@
 	<a href="/user_log_out" class="btn">ログアウト</a></br>
 <script>
 
-console.log('hello');
-
 var isCorrent;
-console.log('hello');
+
 /**
  * ロード後に呼ばれる関数
 **/
@@ -167,6 +165,10 @@ function goNextQuestion() {
 		{
 				name	: 'commingQuestion'
 			,	value	: '<%- commingQuestion %>'
+		},
+		{
+				name	: 'pastQuestion'
+			,	value	: '<%- currentQuestion %>'
 		}
 	];
 	postForm('/answer_question', paramArray);

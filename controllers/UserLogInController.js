@@ -11,7 +11,7 @@ var UserLogInController = function(app, CommonConst, DbConnection, SqlCommon){
 	//ログイン画面にGETしたときの処理
 	app.get('/user_log_in', function(req, res, next) {
 		//セッション情報がある場合
-  		if(req.session && req.session.user_id) {
+  		if(req.session && req.session.user) {
 			//メニュー画面にリダイレクト
     		res.redirect('/menu');
 		//セッション情報がない場合

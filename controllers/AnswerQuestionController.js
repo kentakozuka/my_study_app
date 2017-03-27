@@ -25,7 +25,7 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 		}
 
 		//TODO: 履歴に結果保存
-
+		saveHistory(req.body.pastQuestion, req.body.isCorrent);
 
 		//次の問題がない場合
 		if(!CommonUtils.exTypeOf('undefined', req.body.commingQuestion) && req.body.commingQuestion.length == 0) {
@@ -76,22 +76,34 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 		.spread(
 			//セレクト結果を受け取る
 			function(result) {
-				console.log(result);
 
+				//debug
+				console.log(result);
+				
 				var commingQuestionArray = [];
 				var nextQuestion; 
 				//次の問題があるとき
 				if(req.body.commingQuestion) {
-					var commingQuestionSet = new Set(req.body.commingQuestion);
-					result.forEach(function(record) {
+					//残っている問題を配列に詰める
+					//（１つだけだと配列で渡されない）
+					var tmpCommingQuestionArray = [];
+					if(!CommonUtils.exTypeOf('Array', req.body.commingQuestion)){
+						tmpCommingQuestionArray.push(parseInt(req.body.commingQuestion));
+					} else {
+						tmpCommingQuestionArray = parseInt(req.body.commingQuestion);
+					}
+
+					var commingQuestionSet = new Set(tmpCommingQuestionArray);
+					//indexは1から始まる。ここで少しハマった
+					result.forEach(function(val, index, array) {
 						//これからの問題にレコードが含まれる場合
-						if(commingQuestionSet.has(record.ID)) {
+						if(commingQuestionSet.has(val.ID)) {
 							//最初のレコードを次の問題にする
-							if(commingQuestionArray.length == 0) {
-								nextQuestion = record;
+							if(index == 1) {
+								nextQuestion = val;
 							//それ以降はIDを配列に詰める
 							} else {
-								commingQuestionArray.push(record.ID);
+								commingQuestionArray.push(val.ID);
 							}
 						}
 					});
@@ -125,5 +137,56 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 			}
 		);
 	});
+
+	/**
+	* 解答結果を保存するメソッド
+	* @param boolean 解答結果
+	**/
+	var saveHistory = function(pastQuestion, isCorrent){
+
+		//直前の問題の履歴を取得
+		var queryArray = [];
+		queryArray.push('SELECT'								);
+		queryArray.push('*'										);
+		queryArray.push('FROM'									);
+		queryArray.push(CommonConst.TABLE_NAME_STUDY_HISTORY	);
+		queryArray.push('WHERE'									);
+		queryArray.push('USER_ID ='								);
+		queryArray.push(req.session.user.ID						);
+		queryArray.push('AND'									);
+		queryArray.push('QUESTION_ID ='							);
+		queryArray.push(pastQuestion.ID							);
+		//クエリを結合
+		var query = queryArray.join(' ');
+		//debug
+		console.log(query);
+		//
+		SqlCommon.manipulateRecord(DbConnection, query)
+		//ルーティング
+		.spread(
+			//セレクト結果を受け取る
+			function(results) {
+
+				//debug
+				console.log(results);
+
+				//結果を判定
+    			var histories = results.length ? results : false;
+
+				//TODO:10件以上ある場合は最も古いレコードを削除
+
+				//フィールド
+				var fields  = {
+						USER_ID			: req.session.user
+					,	QUESTION_ID		: pastQuestion.ID
+					,	RESULT			: isCorrent
+				};
+				//インサート処理
+				return sqlCommon.insertRecord(DbConnection, CommonConst.TABLE_NAME_STUDY_HISTORY, fields);
+			}
+		);
+
+		//保存する
+	}
 };
 module.exports = AnswerQuestionController;
