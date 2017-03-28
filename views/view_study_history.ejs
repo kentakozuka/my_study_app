@@ -1,0 +1,43 @@
+<html>
+<head>
+	<link rel="stylesheet" href="../style/style.css" type="text/css" >
+</head>
+<body>
+	<h1>履歴一覧</h1>
+	<table class="bordered" >
+		<tr>
+			<th>
+				ID
+			</th>
+			<th>
+				ユーザID
+			</th>
+			<th>
+				問題ID
+			</th>
+			<th>
+				結果
+			</th>
+		<tr>
+		<% recordList.forEach(function(record) { if(record){ %>
+			<tr>
+				<td>
+					<%= record.ID %>
+				</td>
+				<td>
+					<%= record.USER_ID %>
+				</td>
+				<td>
+					<%= record.QUESTION_ID %>
+				</td>
+				<td>
+					<%= record.RESULT ? '正解' : '不正解' %>
+				</td>
+			</tr>
+		<% }}); %>
+	</table>
+
+	<br/>
+	<a href="/menu" class="btn">メニューに戻る</a></br>
+</body>
+</html>

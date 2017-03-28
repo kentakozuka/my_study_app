@@ -66,6 +66,7 @@ ViewQuestionCategoryController	= require("./controllers/ViewQuestionCategoryCont
 ViewResultController			= require("./controllers/ViewResultController.js"			)(app, CommonConst, DbConnection, SqlCommon);
 ViewUserController				= require("./controllers/ViewUserController.js"				)(app, CommonConst, DbConnection, SqlCommon);
 ViewQuestionController			= require("./controllers/ViewQuestionController.js"			)(app, CommonConst, DbConnection, SqlCommon);
+ViewStudyHistoryController		= require("./controllers/ViewStudyHistoryController.js"		)(app, CommonConst, DbConnection, SqlCommon);
 //ユーザ管理
 UserSignUpController			= require("./controllers/UserSignUpController.js"			)(app, CommonConst, DbConnection, SqlCommon);
 UserLogInController				= require("./controllers/UserLogInController.js"			)(app, CommonConst, DbConnection, SqlCommon);

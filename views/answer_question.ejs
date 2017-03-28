@@ -101,7 +101,7 @@
 	<a href="/user_log_out" class="btn">ログアウト</a></br>
 <script>
 
-var isCorrent;
+var isCorrect;
 
 /**
  * ロード後に呼ばれる関数
@@ -144,8 +144,8 @@ function postForm(action, inputArray){
 **/
 function onAnswerSelected(sel) {
 	console.log(sel);
-	isCorrent = (sel == '<%- currentQuestion.ANSWER %>') ? true : false;
-	console.log(isCorrent);
+	isCorrect = (sel == '<%- currentQuestion.ANSWER %>') ? 1 : 0;
+	console.log(isCorrect);
 	switchDisp(true);
 }
 
@@ -155,20 +155,20 @@ function onAnswerSelected(sel) {
 function goNextQuestion() {
 	var paramArray = [
 		{
-				name	: 'isCorrent'
-			,	value	: isCorrent
+				name	: 'isCorrect'
+			,	value	: isCorrect
 		},
 		{
 				name	: 'child_question_category'
-			,	value	: <%- selectedCategoryArray %>
+			,	value	: [<%- selectedCategoryArray %>]
 		},
 		{
 				name	: 'commingQuestion'
 			,	value	: '<%- commingQuestion %>'
 		},
 		{
-				name	: 'pastQuestion'
-			,	value	: '<%- currentQuestion %>'
+				name	: 'pastQuestionId'
+			,	value	: '<%- currentQuestion.ID %>'
 		}
 	];
 	postForm('/answer_question', paramArray);

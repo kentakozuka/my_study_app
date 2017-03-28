@@ -25,10 +25,12 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 		}
 
 		//履歴に結果保存
-		saveHistory(req.body.pastQuestion, req.body.isCorrent)
-		.then(function() {
-			console.log('insert history finished');
-		});
+		if(req.body.pastQuestionId) {
+			saveHistory(req.session.user, req.body.pastQuestionId, req.body.isCorrect)
+			.then(function() {
+				console.log('insert history finished');
+			});
+		}
 
 		//次の問題がない場合
 		if(!CommonUtils.exTypeOf('undefined', req.body.commingQuestion) && req.body.commingQuestion.length == 0) {
@@ -145,9 +147,10 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 	* @param obj		問題
 	* @param boolean	解答結果
 	**/
-	var saveHistory = function(pastQuestion, isCorrent){
+	var saveHistory = function(user, pastQuestionId, isCorrect){
 
 		//直前の問題の履歴を取得
+		/**
 		var queryArray = [];
 		queryArray.push('SELECT'								);
 		queryArray.push('*'										);
@@ -176,19 +179,22 @@ var AnswerQuestionController = function(app, CommonConst, DbConnection, SqlCommo
 
 				//結果を判定
     			var histories = results.length ? results : false;
+		**/
 
 				//TODO:10件以上ある場合は最も古いレコードを削除
 
 				//フィールド
 				var fields  = {
-						USER_ID			: req.session.user
-					,	QUESTION_ID		: pastQuestion.ID
-					,	RESULT			: isCorrent
+						USER_ID			: user.ID
+					,	QUESTION_ID		: parseInt(pastQuestionId)
+					,	RESULT			: parseInt(isCorrect)
 				};
 				//インサート処理
-				return sqlCommon.insertRecord(DbConnection, CommonConst.TABLE_NAME_STUDY_HISTORY, fields);
+				return SqlCommon.insertRecord(DbConnection, CommonConst.TABLE_NAME_STUDY_HISTORY, fields);
+		/**
 			}
 		);
+		**/
 	}
 };
 module.exports = AnswerQuestionController;
